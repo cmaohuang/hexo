@@ -1,0 +1,8 @@
+hexo:
+  build: .
+  ports:
+    - "4000:4000"
+  volumes:
+    - ./source:/hexo/source
+    - ./themes:/hexo/themes
+    - ./_config.yml:/hexo/_config.yml
