@@ -1,16 +1,15 @@
 # I'm using hexo in docker with these versions
 
 * git
-* docker 1.8.1
-* docker-compose 1.4.0
+* docker 1.8.2
+* docker-compose 1.4.2
 * hexo@3.1.1
 * hexo-deployer-git@0.0.4
 
 ## Init your hexo blog
 
-Usually I use docker-compose to manage container, also you can use docker command
+Use docker-compose to build an image which named hexo_hexo
 
-    # docker-compose will build an image named hexo_hexo
     docker-compose build
 
 Copy hexo's config file, source/ themes/ folder to host, and we could use our favorite editor to edit these files directly on our host not in the container
@@ -36,19 +35,19 @@ Create your first blog post named "Hello Hexo"
 
 ## Deploy your blog to GitHub
 
-edit _config.yml, change YOUR_GITHUB_ID to your id
+Edit _config.yml, change YOUR_GITHUB_ID to your id
 
     deploy:
       type: git
       repo: git@github.com:YOUR_GITHUB_ID/YOUR_GITHUB_ID.github.io.git
       branch: master
 
-copy your key into container, not a secure way but an easy way, docker still try to figure out [best practices](https://github.com/docker/docker/issues/13490)
+Copy your key into container, not a secure way but an easy way, docker still try to figure out [best practices](https://github.com/docker/docker/issues/13490)
 
     docker exec hexo_hexo_1 bash -c "mkdir /root/.ssh; chmod 700 /root/.ssh"
     docker cp ~/.ssh/id_rsa hexo_hexo_1:/root/.ssh/id_rsa
 
-accept GitHub HostKey and setup user.name/user.email for git commit
+Accept GitHub HostKey and setup user.name/user.email for git commit
 
     # You have to do this once
     docker exec -it hexo_hexo_1 bash
@@ -72,7 +71,7 @@ Visit your GitHub Pages https://YOUR_GITHUB_ID.github.io/
 
 ## [theme](https://hexo.io/themes/)
 
-I like [minos](https://github.com/ppoffice/hexo-theme-minos)
+[minos](https://github.com/ppoffice/hexo-theme-minos)
 
     git clone https://github.com/ppoffice/hexo-theme-minos.git themes/minos
 
@@ -80,11 +79,23 @@ edit _config.yml
 
     theme: minos
 
-move themes/minos/_config.yml.example to themes/minos/_config.yml
+Move themes/minos/_config.yml.example to themes/minos/_config.yml
 
-restart your container
+    mv themes/minos/_config.yml.example themes/minos/_config.yml
+
+Enable custom categories page and tags page
+
+    cp -a themes/minos/_source/* source/
+
+Restart your container
 
     docker-compose restart
+
+## use Disqus for managing comments
+
+Edit _config.yml
+
+    disqus_shortname: YOUR_DISQUS_SHORTNAME
 
 ## Reference
 
